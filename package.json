@@ -1,5 +1,5 @@
 {
-  "name": "@economist/component-pictrue",
+  "name": "@economist/component-picture",
   "version": "1.0.0",
   "description": "Responsive picture element with support mulitple sources and dppx",
   "author": "The Economist (http://economist.com)",
@@ -40,7 +40,7 @@
   },
   "devpack-doc": {
     "demohtml": {
-      "cmd": "babel-node -p \"require('react').renderToString(require('./example'))\""
+      "cmd": "babel-node -p \"require('react-dom/server').renderToString(require('./example'))\""
     },
     "css": [
       {
@@ -102,7 +102,7 @@
   },
   "config": {
     "lint_opts": "--ignore-path .gitignore --ext .es6",
-    "testbundle_opts": "-r react -r .:./index.es6 -r ./example.js:example ./test/index.js -o testbundle.js",
+    "testbundle_opts": "-r react -r .:./index.es6 -r ./example.js:example ./test/*.es6 -o testbundle.js",
     "ghpages_files": "*.html *.css *.js assets/"
   },
   "scripts": {
@@ -141,7 +141,6 @@
     "browserify": "^11.0.1",
     "chai": "^3.2.0",
     "chai-spies": "^0.6.0",
-    "chai-things": "^0.2.0",
     "cssnext": "^1.8.4",
     "eslint": "^1.3.1",
     "eslint-config-strict": "^5.0.0",
@@ -157,8 +156,6 @@
     "npm-watch": "0.0.1",
     "parallelshell": "^2.0.0",
     "pre-commit": "^1.0.10",
-    "react": "^0.14.0",
-    "react-addons-test-utils": "^0.14.2",
     "react-dom": "^0.14.2",
     "watchify": "^3.4.0"
   },
