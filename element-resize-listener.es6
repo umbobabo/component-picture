@@ -49,7 +49,7 @@ export function addElementResizeListener(element, callback) {
   }
   let elementReference = elementsWithResizeListeners.find((item) => item.element === element);
   if (!elementReference) {
-    elementReference = { element, listeners: [], frame: null };
+    elementReference = { element, listeners: [], frame: null, oldWidth: null, oldHeight: null };
     elementsWithResizeListeners.push(elementReference);
   }
   if (elementReference.listeners.indexOf(callback) !== -1) {
