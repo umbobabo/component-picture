@@ -23,9 +23,6 @@ export default class Picture extends React.Component {
       const isPortrait = currentImageRatio < portraitImageRatioCutoff;
       return isLessWide && isPortrait ? currentSource : previousSource;
     }, sourcesOfDppx[0] || {});
-    // 1190/560 === 2.12
-    // 790/372 === 2.12
-    // 480/390 === 1.23
     this.state = {
       ...smallPortraitSource,
     };
