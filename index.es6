@@ -6,17 +6,34 @@ import { getClosestDppx } from './get-dppx';
 import { addElementResizeListener, removeElementResizeListener } from './element-resize-listener';
 export default class Picture extends React.Component {
 
+  defaultProps = {
+    alt: '',
+    sources: [],
+  }
+
   constructor({ sources }) {
     super(...arguments);
     this.changeImageByWidth = this.changeImageByWidth.bind(this);
     const dppx = getClosestDppx(sources);
+    const smallPortraitSource = sources.reduce((previousSource, currentSource) => {
+      if (currentSource.dppx !== dppx) {
+        return previousSource;
+      }
+      const portraitImageRatioCutoff = 2;
+      const isLessWide = currentSource.width < previousSource.width;
+      const currentImageRatio = Math.abs(currentSource.width / currentSource.height);
+      const isPortrait = currentImageRatio < portraitImageRatioCutoff;
+      return isLessWide && isPortrait ? currentSource : previousSource;
+    }, sources[0] || {});
     this.state = {
-      ...sources.find((source) => source.dppx === dppx),
+      ...smallPortraitSource,
     };
   }
 
   componentDidMount() {
-    addElementResizeListener(findDomNode(this), this.changeImageByWidth);
+    const element = findDomNode(this);
+    addElementResizeListener(element, this.changeImageByWidth);
+    this.changeImageByWidth(element.offsetWidth, element.offsetHeight);
   }
 
   componentWillUnmount() {

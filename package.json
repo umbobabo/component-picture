@@ -69,7 +69,7 @@
         "contents": "window.React = require('react');"
       },
       {
-        "contents": "require('react').render(require('example'),document.getElementById('component-preview'));"
+        "contents": "require('react-dom').render(require('example'),document.getElementById('component-preview'));"
       },
       {
         "contents": "if(document.getElementById('mocha')){mocha.checkLeaks();mocha.run();}"
@@ -102,7 +102,7 @@
   },
   "config": {
     "lint_opts": "--ignore-path .gitignore --ext .es6",
-    "testbundle_opts": "-r react -r .:./index.es6 -r ./example.js:example ./test/*.es6 -o testbundle.js",
+    "testbundle_opts": "-r react -r react-dom -r .:./index.es6 -r ./example.js:example ./test/*.es6 -o testbundle.js",
     "ghpages_files": "*.html *.css *.js assets/"
   },
   "scripts": {
@@ -141,6 +141,7 @@
     "browserify": "^11.0.1",
     "chai": "^3.2.0",
     "chai-spies": "^0.6.0",
+    "chai-things": "^0.2.0",
     "cssnext": "^1.8.4",
     "eslint": "^1.3.1",
     "eslint-config-strict": "^5.0.0",
