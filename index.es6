@@ -14,7 +14,7 @@ export default class Picture extends React.Component {
   constructor({ sources }) {
     super(...arguments);
     this.changeImageByWidth = this.changeImageByWidth.bind(this);
-    const dppx = 1 || getClosestDppx(sources);
+    const dppx = getClosestDppx(sources);
     const smallPortraitSource = sources.reduce((previousSource, currentSource) => {
       if (currentSource.dppx !== dppx) {
         return previousSource;
