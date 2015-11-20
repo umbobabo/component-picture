@@ -69,7 +69,7 @@
         "contents": "window.React = require('react');"
       },
       {
-        "contents": "require('react').render(require('example'),document.getElementById('component-preview'));"
+        "contents": "require('react-dom').render(require('example'),document.getElementById('component-preview'));"
       },
       {
         "contents": "if(document.getElementById('mocha')){mocha.checkLeaks();mocha.run();}"
@@ -102,7 +102,7 @@
   },
   "config": {
     "lint_opts": "--ignore-path .gitignore --ext .es6",
-    "testbundle_opts": "-r react -r .:./index.es6 -r ./example.js:example ./test/*.es6 -o testbundle.js",
+    "testbundle_opts": "-r react -r react-dom -r .:./index.es6 -r ./example.js:example ./test/*.es6 -o testbundle.js",
     "ghpages_files": "*.html *.css *.js assets/"
   },
   "scripts": {
