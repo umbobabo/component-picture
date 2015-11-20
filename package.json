@@ -1,6 +1,6 @@
 {
   "name": "@economist/component-picture",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Responsive picture element with support mulitple sources and dppx",
   "author": "The Economist (http://economist.com)",
   "license": "ISC",
