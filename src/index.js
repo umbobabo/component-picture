@@ -1,30 +1,27 @@
-import React from 'react';
-/* eslint-disable id-match */
-import { findDOMNode as findDomNode } from 'react-dom';
-/* eslint-enable id-match */
-import { getClosestDppx } from './get-dppx';
 import { addElementResizeListener, removeElementResizeListener } from './element-resize-listener';
+import React from 'react';
+import { findDOMNode as findDomNode } from 'react-dom';
+import { getClosestDppx } from './get-dppx';
+
+export function getSmallPortraitSource(sources, dppx) {
+  return sources.reduce((previousSource, currentSource) => {
+    if (currentSource.dppx !== dppx) {
+      return previousSource;
+    }
+    const portraitImageRatioCutoff = 2;
+    const isLessWide = currentSource.width < previousSource.width;
+    const currentImageRatio = Math.abs(currentSource.width / currentSource.height);
+    const isPortrait = currentImageRatio < portraitImageRatioCutoff;
+    return isLessWide && isPortrait ? currentSource : previousSource;
+  });
+}
+
 export default class Picture extends React.Component {
-
-  defaultProps = {
-    alt: '',
-    sources: [],
-  }
-
   constructor({ sources }) {
-    super(...arguments);
+    super(...arguments); //eslint-disable-line
     this.changeImageByWidth = this.changeImageByWidth.bind(this);
     const dppx = getClosestDppx(sources);
-    const smallPortraitSource = sources.reduce((previousSource, currentSource) => {
-      if (currentSource.dppx !== dppx) {
-        return previousSource;
-      }
-      const portraitImageRatioCutoff = 2;
-      const isLessWide = currentSource.width < previousSource.width;
-      const currentImageRatio = Math.abs(currentSource.width / currentSource.height);
-      const isPortrait = currentImageRatio < portraitImageRatioCutoff;
-      return isLessWide && isPortrait ? currentSource : previousSource;
-    }, sources[0] || {});
+    const smallPortraitSource = getSmallPortraitSource(sources, dppx);
     this.state = {
       ...smallPortraitSource,
     };
@@ -60,7 +57,7 @@ export default class Picture extends React.Component {
 
   render() {
     const { url } = this.state || {};
-    const { sources, className, alt, ...remainingProps } = this.props;
+    const { className, alt, ...remainingProps } = this.props;
     const imageProps = { alt, src: url };
     const wrapperProps = {
       ...remainingProps,
@@ -68,11 +65,16 @@ export default class Picture extends React.Component {
     };
     return (
       <div {...wrapperProps}>
-        <img {...imageProps}/>
+        <img {...imageProps} />
       </div>
     );
   }
 }
+
+Picture.defaultProps = {
+  alt: '',
+  sources: [],
+};
 
 if (process.env.NODE_ENV !== 'production') {
   Picture.propTypes = {

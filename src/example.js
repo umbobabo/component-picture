@@ -1,5 +1,6 @@
-import React from 'react';
+import 'babel-polyfill';
 import Picture from './';
+import React from 'react';
 
 export default (
   <Picture

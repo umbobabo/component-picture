@@ -1,12 +1,13 @@
-import React from 'react';
-import Picture from '..';
-import * as dppxUtils from '../get-dppx';
-import * as resizeUtils from '../element-resize-listener';
+import 'babel-polyfill';
+import * as dppxUtils from '../src/get-dppx';
 import * as reactDom from 'react-dom';
+import * as resizeUtils from '../src/element-resize-listener';
+import Picture from '../src';
+import React from 'react';
 import chai from 'chai';
 import chaiSpies from 'chai-spies';
 chai.use(chaiSpies).should();
-/* eslint react/no-danger: 0, id-match: 0 */
+
 describe('Picture', () => {
   let picture = null;
   it('is compatible with React.Component', () => {
@@ -15,40 +16,42 @@ describe('Picture', () => {
   });
 
   it('renders a React element', () => {
-    React.isValidElement(<Picture alt="foo" sources={[]}/>).should.equal(true);
+    React.isValidElement(<Picture alt="foo" sources={[]} />).should.equal(true);
   });
 
   describe('initial state', () => {
-    beforeEach(() => {
-      dppxUtils.getClosestDppx = chai.spy(() => 1);
-    });
-
     it('sets state.{dppx,url,width,height} to first image that matches closest dppx', () => {
+      dppxUtils.getClosestDppx = chai.spy(() => 1);
       picture = new Picture({
         alt: 'foo',
         sources: [
           { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
+          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 2 },
           { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
         ],
       });
       picture.state.should.deep.equal({
-        url: 'https://placehold.it/896x504',
-        width: 896,
-        height: 504,
+        url: 'https://placehold.it/400x500',
+        width: 400,
+        height: 500,
         dppx: 1,
       });
+
       dppxUtils.getClosestDppx = chai.spy(() => 2);
       picture = new Picture({
         alt: 'foo',
         sources: [
           { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
+          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 2 },
           { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
         ],
       });
       picture.state.should.deep.equal({
-        url: 'https://placehold.it/1792x1008',
-        width: 896,
-        height: 504,
+        url: 'https://placehold.it/400x500',
+        width: 400,
+        height: 500,
         dppx: 2,
       });
     });
@@ -153,7 +156,7 @@ describe('Picture', () => {
       picture.state.url = 'http://foo/bar';
       picture.render().should.deep.equal(
         <div className="picture">
-          <img src="http://foo/bar" alt="foo"/>
+          <img src="http://foo/bar" alt="foo" />
         </div>
       );
     });
@@ -164,7 +167,7 @@ describe('Picture', () => {
       picture.state.alt = 'never this';
       picture.render().should.deep.equal(
         <div className="picture">
-          <img src="http://some-image" alt="this"/>
+          <img src="http://some-image" alt="this" />
         </div>
       );
     });
@@ -174,7 +177,7 @@ describe('Picture', () => {
       picture.state.url = 'http://some-image';
       picture.render().should.deep.equal(
         <div className="picture foo bar">
-          <img src="http://some-image" alt="this"/>
+          <img src="http://some-image" alt="this" />
         </div>
       );
     });
@@ -184,7 +187,7 @@ describe('Picture', () => {
       picture.state.url = 'http://some-image';
       picture.render().should.deep.equal(
         <div className="picture baz bing">
-          <img src="http://some-image" alt="this"/>
+          <img src="http://some-image" alt="this" />
         </div>
       );
     });
@@ -194,7 +197,7 @@ describe('Picture', () => {
       picture.state.url = 'http://some-image';
       picture.render().should.deep.equal(
         <div className="picture" itemProp="blarg">
-          <img src="http://some-image" alt="this"/>
+          <img src="http://some-image" alt="this" />
         </div>
       );
     });
