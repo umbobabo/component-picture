@@ -17,8 +17,9 @@ export function getSmallPortraitSource(sources, dppx) {
 }
 
 export default class Picture extends React.Component {
-  constructor({ sources }) {
-    super(...arguments); //eslint-disable-line
+  constructor(props, ...rest) {
+    super(props, ...rest);
+    const { sources } = props;
     this.changeImageByWidth = this.changeImageByWidth.bind(this);
     const dppx = getClosestDppx(sources);
     const smallPortraitSource = getSmallPortraitSource(sources, dppx);
