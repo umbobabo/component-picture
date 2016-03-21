@@ -5,63 +5,60 @@ import * as resizeUtils from '../src/element-resize-listener';
 import Picture from '../src';
 import React from 'react';
 import chai from 'chai';
+import chaiEnzyme from 'chai-enzyme';
 import chaiSpies from 'chai-spies';
-chai.use(chaiSpies).should();
+import { render } from 'enzyme';
+chai.use(chaiEnzyme()).use(chaiSpies).should();
 
 describe('Picture', () => {
-  let picture = null;
-  it('is compatible with React.Component', () => {
-    Picture.should.be.a('function')
-      .and.respondTo('render');
-  });
-
   it('renders a React element', () => {
-    React.isValidElement(<Picture alt="foo" sources={[]} />).should.equal(true);
+    React.isValidElement(<Picture />).should.equal(true);
   });
 
   describe('initial state', () => {
+    let picture = null;
+    let rendered = null;
     it('sets state.{dppx,url,width,height} to first image that matches closest dppx', () => {
       dppxUtils.getClosestDppx = chai.spy(() => 1);
-      picture = new Picture({
-        alt: 'foo',
-        sources: [
-          { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
-          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
-          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 2 },
-          { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
-        ],
-      });
-      picture.state.should.deep.equal({
-        url: 'https://placehold.it/400x500',
-        width: 400,
-        height: 500,
-        dppx: 1,
-      });
+      rendered = render(
+        <Picture
+          alt="foo"
+          sources={[
+            { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+            { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
+            { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 2 },
+            { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
+          ]}
+        />
+      );
+      picture = rendered.find('.picture');
+      picture.should.have.html('<div class="picture"><img alt="foo" src="https://placehold.it/400x500"></div>');
 
       dppxUtils.getClosestDppx = chai.spy(() => 2);
-      picture = new Picture({
-        alt: 'foo',
-        sources: [
-          { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
-          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
-          { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 2 },
-          { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
-        ],
-      });
-      picture.state.should.deep.equal({
-        url: 'https://placehold.it/400x500',
-        width: 400,
-        height: 500,
-        dppx: 2,
-      });
+      rendered = render(
+        <Picture
+          alt="foo"
+          sources={[
+            { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+            { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
+            { url: 'https://placehold.it/300x400', width: 300, height: 400, dppx: 2 },
+            { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
+          ]}
+        />
+      );
+      picture = rendered.find('.picture');
+      picture.should.have.html('<div class="picture"><img alt="foo" src="https://placehold.it/300x400"></div>');
     });
   });
 
   describe('componentDidMount', () => {
     let reactDomRef = null;
+    let picture = null;
     beforeEach(() => {
       picture = new Picture({
-        sources: [],
+        sources: [
+          { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+        ],
         alt: 'foo',
       });
       picture.refs = { picture: {} };
@@ -84,9 +81,12 @@ describe('Picture', () => {
 
   describe('componentWillUnmount', () => {
     let reactDomRef = null;
+    let picture = null;
     beforeEach(() => {
       picture = new Picture({
-        sources: [],
+        sources: [
+          { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+        ],
         alt: 'foo',
       });
       picture.refs = { picture: {} };
@@ -108,6 +108,7 @@ describe('Picture', () => {
   });
 
   describe('changeImageByWidth', () => {
+    let picture = null;
     beforeEach(() => {
       picture = new Picture({
         sources: [
@@ -147,60 +148,65 @@ describe('Picture', () => {
       picture.changeImageByWidth(2000, 2000);
       picture.state.url.should.equal('https://placehold.it/896x504', 'closest to 2000x2000-dppx0.5');
     });
-
   });
 
   describe('Rendering', () => {
-    it('renders a div.pictrue with an <img> tag, with src from state.url', () => {
-      picture = new Picture({ sources: [], alt: 'foo' });
-      picture.state.url = 'http://foo/bar';
-      picture.render().should.deep.equal(
-        <div className="picture">
-          <img src="http://foo/bar" alt="foo" />
-        </div>
+    let rendered = null;
+    let picture = null;
+    before(() => {
+      rendered = render(
+        <Picture
+          sources={[
+            { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
+          ]}
+          alt="foobar"
+          className={[ 'foo', 'fiz' ]}
+          itemProp="blarg"
+        />
       );
+      picture = rendered.find('.picture');
+    });
+
+    it('renders a div.picture with an <img> tag, with src from state.url', () => {
+      picture.should.have.tagName('div');
+      picture.should.have.className('picture');
+      const img = picture.find('img');
+      img.should.have.attr('src', 'https://placehold.it/896x504');
     });
 
     it('renders <img> alt from props.alt', () => {
-      picture = new Picture({ sources: [], alt: 'this' });
-      picture.state.url = 'http://some-image';
-      picture.state.alt = 'never this';
-      picture.render().should.deep.equal(
-        <div className="picture">
-          <img src="http://some-image" alt="this" />
-        </div>
-      );
+      const img = picture.find('img');
+      img.should.have.attr('alt', 'foobar');
     });
 
     it('renders div className based on props.className', () => {
-      picture = new Picture({ sources: [], alt: 'this', className: 'foo bar' });
-      picture.state.url = 'http://some-image';
-      picture.render().should.deep.equal(
-        <div className="picture foo bar">
-          <img src="http://some-image" alt="this" />
-        </div>
-      );
-    });
-
-    it('renders div className based on props.className array', () => {
-      picture = new Picture({ sources: [], alt: 'this', className: [ 'baz', 'bing' ] });
-      picture.state.url = 'http://some-image';
-      picture.render().should.deep.equal(
-        <div className="picture baz bing">
-          <img src="http://some-image" alt="this" />
-        </div>
-      );
+      picture.should.have.className('foo').and.have.className('fiz');
     });
 
     it('can be given arbitrary props to render', () => {
-      picture = new Picture({ sources: [], alt: 'this', itemProp: 'blarg' });
-      picture.state.url = 'http://some-image';
-      picture.render().should.deep.equal(
-        <div className="picture" itemProp="blarg">
-          <img src="http://some-image" alt="this" />
-        </div>
-      );
+      picture.should.have.attr('itemprop', 'blarg');
     });
   });
 
+  describe('SVG', () => {
+    let rendered = null;
+    let picture = null;
+    before(() => {
+      rendered = render(
+        <Picture
+          sources={[
+            { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
+            { url: 'some-file.svg', mime: 'image/svg+xml' },
+          ]}
+          alt="foobar"
+        />
+      );
+      picture = rendered.find('.picture');
+    });
+
+    it('ignores other image files if an SVG file is present', () => {
+      const svgObject = picture.find('object');
+      svgObject.should.have.attr('data', 'some-file.svg');
+    });
+  });
 });

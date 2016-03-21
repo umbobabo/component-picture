@@ -19,23 +19,43 @@ export function getSmallPortraitSource(sources, dppx) {
 export default class Picture extends React.Component {
   constructor(props, ...rest) {
     super(props, ...rest);
-    const { sources } = props;
     this.changeImageByWidth = this.changeImageByWidth.bind(this);
-    const dppx = getClosestDppx(sources);
-    const smallPortraitSource = getSmallPortraitSource(sources, dppx);
+    const { sources } = props;
+    let isSvgSource = false;
+    sources.forEach((source) => {
+      if (source.mime && source.mime === 'image/svg+xml') {
+        isSvgSource = true;
+        sources[0] = source;
+        return;
+      }
+    });
+    let smallPortraitSource = {};
+    if (isSvgSource === false) {
+      const dppx = getClosestDppx(sources);
+      smallPortraitSource = getSmallPortraitSource(sources, dppx);
+    } else {
+      smallPortraitSource = sources[0];
+    }
     this.state = {
       ...smallPortraitSource,
+      isSvgSource,
     };
   }
 
   componentDidMount() {
-    const element = findDomNode(this);
-    addElementResizeListener(element, this.changeImageByWidth);
-    this.changeImageByWidth(element.offsetWidth, element.offsetHeight);
+    const { isSvgSource } = this.state;
+    if (isSvgSource === false) {
+      const element = findDomNode(this);
+      addElementResizeListener(element, this.changeImageByWidth);
+      this.changeImageByWidth(element.offsetWidth, element.offsetHeight);
+    }
   }
 
   componentWillUnmount() {
-    removeElementResizeListener(findDomNode(this), this.changeImageByWidth);
+    const { isSvgSource } = this.state;
+    if (isSvgSource === false) {
+      removeElementResizeListener(findDomNode(this), this.changeImageByWidth);
+    }
   }
 
   changeImageByWidth(width, height) {
@@ -57,16 +77,20 @@ export default class Picture extends React.Component {
   }
 
   render() {
-    const { url } = this.state || {};
+    const { url, isSvgSource } = this.state || {};
     const { className, alt, ...remainingProps } = this.props;
     const imageProps = { alt, src: url };
+    /* eslint-disable id-blacklist */
+    const svgProps = { type: 'image/svg+xml', data: url };
+    /* eslint-enable id-blacklist */
+    const pictureElement = (isSvgSource === false) ? (<img {...imageProps} />) : (<object {...svgProps} />);
     const wrapperProps = {
       ...remainingProps,
       className: [ 'picture' ].concat(className).join(' ').trim(),
     };
     return (
       <div {...wrapperProps}>
-        <img {...imageProps} />
+        {pictureElement}
       </div>
     );
   }
@@ -79,13 +103,17 @@ Picture.defaultProps = {
 
 if (process.env.NODE_ENV !== 'production') {
   Picture.propTypes = {
-    className: React.PropTypes.string,
+    className: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.array,
+    ]),
     alt: React.PropTypes.string.isRequired,
     sources: React.PropTypes.arrayOf(React.PropTypes.shape({
       url: React.PropTypes.string.isRequired,
       width: React.PropTypes.number.isRequired,
       height: React.PropTypes.number.isRequired,
       dppx: React.PropTypes.number.isRequired,
+      mime: React.PropTypes.string,
     })).isRequired,
   };
 }
