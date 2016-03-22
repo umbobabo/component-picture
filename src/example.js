@@ -16,6 +16,7 @@ const sources = [
   { url: 'https://placehold.it/512x768', width: 256, height: 384, dppx: 2 },
   { url: 'https://placehold.it/256x384', width: 256, height: 384, dppx: 1 },
 ];
+// exmaple of an SVG source:
 // const sources = [
 //   { url: '/assets/example.svg', mime: 'image/svg+xml' },
 // ];
