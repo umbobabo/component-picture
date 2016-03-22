@@ -43,8 +43,7 @@ export default class Picture extends React.Component {
   }
 
   componentDidMount() {
-    const { isSvgSource } = this.state;
-    if (isSvgSource === false) {
+    if (this.state.isSvgSource === false) {
       const element = findDomNode(this);
       addElementResizeListener(element, this.changeImageByWidth);
       this.changeImageByWidth(element.offsetWidth, element.offsetHeight);
@@ -52,8 +51,7 @@ export default class Picture extends React.Component {
   }
 
   componentWillUnmount() {
-    const { isSvgSource } = this.state;
-    if (isSvgSource === false) {
+    if (this.state.isSvgSource === false) {
       removeElementResizeListener(findDomNode(this), this.changeImageByWidth);
     }
   }
@@ -79,17 +77,14 @@ export default class Picture extends React.Component {
   render() {
     const { url, isSvgSource } = this.state || {};
     const { className, alt, ...remainingProps } = this.props;
-    const imageProps = { alt, src: url };
-    /* eslint-disable id-blacklist */
-    const svgProps = { type: 'image/svg+xml', data: url };
-    /* eslint-enable id-blacklist */
-    const pictureElement = (isSvgSource === false) ? (<img {...imageProps} />) : (<object {...svgProps} />);
-    const wrapperProps = {
-      ...remainingProps,
-      className: [ 'picture' ].concat(className).join(' ').trim(),
-    };
+    let pictureElement = null;
+    if (isSvgSource) {
+      pictureElement = (<object type="image/svg+xml" data={url} className="picture__object" />);
+    } else {
+      pictureElement = (<img alt={alt} src={url} className="picture__image" />);
+    }
     return (
-      <div {...wrapperProps}>
+      <div {...remainingProps} className={[ 'picture' ].concat(className).join(' ').trim()}>
         {pictureElement}
       </div>
     );

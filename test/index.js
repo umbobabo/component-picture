@@ -2,12 +2,12 @@ import 'babel-polyfill';
 import * as dppxUtils from '../src/get-dppx';
 import * as reactDom from 'react-dom';
 import * as resizeUtils from '../src/element-resize-listener';
+import { mount, shallow } from 'enzyme';
 import Picture from '../src';
 import React from 'react';
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import chaiSpies from 'chai-spies';
-import { render } from 'enzyme';
 chai.use(chaiEnzyme()).use(chaiSpies).should();
 
 describe('Picture', () => {
@@ -18,24 +18,9 @@ describe('Picture', () => {
   describe('initial state', () => {
     let picture = null;
     let rendered = null;
-    it('sets state.{dppx,url,width,height} to first image that matches closest dppx', () => {
+    it('sets state.{dppx,url,width,height} to first image that matches closest dppx (1)', () => {
       dppxUtils.getClosestDppx = chai.spy(() => 1);
-      rendered = render(
-        <Picture
-          alt="foo"
-          sources={[
-            { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
-            { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
-            { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 2 },
-            { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
-          ]}
-        />
-      );
-      picture = rendered.find('.picture');
-      picture.should.have.html('<div class="picture"><img alt="foo" src="https://placehold.it/400x500"></div>');
-
-      dppxUtils.getClosestDppx = chai.spy(() => 2);
-      rendered = render(
+      rendered = shallow(
         <Picture
           alt="foo"
           sources={[
@@ -47,7 +32,28 @@ describe('Picture', () => {
         />
       );
       picture = rendered.find('.picture');
-      picture.should.have.html('<div class="picture"><img alt="foo" src="https://placehold.it/300x400"></div>');
+      picture.should.contain(
+        <img alt="foo" src="https://placehold.it/400x500" className="picture__image" />
+      );
+    });
+
+    it('sets state.{dppx,url,width,height} to first image that matches closest dppx (2)', () => {
+      dppxUtils.getClosestDppx = chai.spy(() => 2);
+      rendered = shallow(
+        <Picture
+          alt="foo"
+          sources={[
+            { url: 'https://placehold.it/1792x1008', width: 896, height: 504, dppx: 2 },
+            { url: 'https://placehold.it/400x500', width: 400, height: 500, dppx: 1 },
+            { url: 'https://placehold.it/300x400', width: 300, height: 400, dppx: 2 },
+            { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
+          ]}
+        />
+      );
+      picture = rendered.find('.picture');
+      picture.should.contain(
+        <img alt="foo" src="https://placehold.it/300x400" className="picture__image" />
+      );
     });
   });
 
@@ -154,7 +160,7 @@ describe('Picture', () => {
     let rendered = null;
     let picture = null;
     before(() => {
-      rendered = render(
+      rendered = mount(
         <Picture
           sources={[
             { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
@@ -192,7 +198,7 @@ describe('Picture', () => {
     let rendered = null;
     let picture = null;
     before(() => {
-      rendered = render(
+      rendered = mount(
         <Picture
           sources={[
             { url: 'https://placehold.it/896x504', width: 896, height: 504, dppx: 1 },
