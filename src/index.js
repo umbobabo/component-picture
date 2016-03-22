@@ -76,7 +76,9 @@ export default class Picture extends React.Component {
 
   render() {
     const { url, isSvgSource } = this.state || {};
+    /* eslint-disable no-use-before-define */
     const { className, alt, ...remainingProps } = this.props;
+    /* eslint-enable no-use-before-define */
     let pictureElement = null;
     if (isSvgSource) {
       pictureElement = (<object type="image/svg+xml" data={url} className="picture__object" />);
