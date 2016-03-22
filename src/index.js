@@ -77,6 +77,9 @@ export default class Picture extends React.Component {
   render() {
     const { url, isSvgSource } = this.state || {};
     /* eslint-disable no-use-before-define */
+    // rule disabled due to following issues:
+    // https://github.com/eslint/eslint/issues/5135
+    // https://github.com/babel/babel-eslint/issues/276
     const { className, alt, ...remainingProps } = this.props;
     /* eslint-enable no-use-before-define */
     let pictureElement = null;
