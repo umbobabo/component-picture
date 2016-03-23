@@ -25,7 +25,6 @@ describe('getDppx', () => {
   });
 
   describe('getClosestDppx', () => {
-
     it('returns number closest number in array', () => {
       getClosestDppx([ 1, 2, 3 ], 2.6).should.equal(3);
       getClosestDppx([ 1, 2, 3 ], 2.2).should.equal(2);
@@ -41,8 +40,7 @@ describe('getDppx', () => {
     });
 
     it('defaults second argument to be getDppx', () => {
-      globalObject.window = globalObject.window || {};
-      globalObject.window.devicePixelRatio = 3;
+      globalObject.devicePixelRatio = 3;
       getClosestDppx([ 1, 2, 3 ]).should.equal(3);
     });
   });
