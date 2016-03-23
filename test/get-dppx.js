@@ -40,8 +40,7 @@ describe('getDppx', () => {
     });
 
     it('defaults second argument to be getDppx', () => {
-      globalObject.devicePixelRatio = 3;
-      getClosestDppx([ 1, 2, 3 ]).should.equal(3);
+      getClosestDppx([ 1, 2, globalObject.devicePixelRatio, 3 ]).should.equal(globalObject.devicePixelRatio);
     });
   });
 });
