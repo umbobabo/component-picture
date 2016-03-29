@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/the-economist-editorial/component-picture.git"
+    "url": "git+https://github.com/economist-components/component-picture.git"
   },
   "scripts": {
     "access": "npm-run-all --parallel access:*",
