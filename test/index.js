@@ -1,10 +1,10 @@
 import 'babel-polyfill';
+import React from 'react';
+import Picture from '../src';
 import * as dppxUtils from '../src/get-dppx';
 import * as reactDom from 'react-dom';
 import * as resizeUtils from '../src/element-resize-listener';
 import { mount, shallow } from 'enzyme';
-import Picture from '../src';
-import React from 'react';
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import chaiSpies from 'chai-spies';
