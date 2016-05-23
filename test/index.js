@@ -1,10 +1,10 @@
 import 'babel-polyfill';
+import React from 'react';
+import Picture from '../src';
 import * as dppxUtils from '../src/get-dppx';
 import * as reactDom from 'react-dom';
 import * as resizeUtils from '../src/element-resize-listener';
 import { mount, shallow } from 'enzyme';
-import Picture from '../src';
-import React from 'react';
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import chaiSpies from 'chai-spies';
@@ -33,7 +33,12 @@ describe('Picture', () => {
       );
       picture = rendered.find('.picture');
       picture.should.contain(
-        <img alt="foo" src="https://placehold.it/400x500" className="picture__image" />
+        <img
+          alt="foo"
+          src="https://placehold.it/400x500"
+          itemProp="image"
+          className="picture__image"
+        />
       );
     });
 
@@ -52,7 +57,12 @@ describe('Picture', () => {
       );
       picture = rendered.find('.picture');
       picture.should.contain(
-        <img alt="foo" src="https://placehold.it/300x400" className="picture__image" />
+        <img
+          alt="foo"
+          src="https://placehold.it/300x400"
+          itemProp="image"
+          className="picture__image"
+        />
       );
     });
   });
@@ -190,7 +200,7 @@ describe('Picture', () => {
     });
 
     it('can be given arbitrary props to render', () => {
-      picture.should.have.attr('itemprop', 'blarg');
+      picture.find('img').should.have.attr('itemprop', 'blarg');
     });
   });
 

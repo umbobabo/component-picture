@@ -76,17 +76,26 @@ export default class Picture extends React.Component {
 
   render() {
     const { url, isSvgSource } = this.state || {};
-    /* eslint-disable no-use-before-define */
-    // rule disabled due to following issues:
-    // https://github.com/eslint/eslint/issues/5135
-    // https://github.com/babel/babel-eslint/issues/276
-    const { className, alt, ...remainingProps } = this.props;
-    /* eslint-enable no-use-before-define */
+    const { className, alt, itemProp, ...remainingProps } = this.props;
     let pictureElement = null;
     if (isSvgSource) {
-      pictureElement = (<object type="image/svg+xml" data={url} className="picture__object" />);
+      pictureElement = (
+        <object
+          type="image/svg+xml"
+          data={url}
+          itemProp={itemProp}
+          className="picture__object"
+        />
+      );
     } else {
-      pictureElement = (<img alt={alt} src={url} className="picture__image" />);
+      pictureElement = (
+        <img
+          alt={alt}
+          src={url}
+          itemProp={itemProp}
+          className="picture__image"
+        />
+      );
     }
     return (
       <div {...remainingProps} className={[ 'picture' ].concat(className).join(' ').trim()}>
@@ -99,10 +108,12 @@ export default class Picture extends React.Component {
 Picture.defaultProps = {
   alt: '',
   sources: [],
+  itemProp: 'image',
 };
 
 if (process.env.NODE_ENV !== 'production') {
   Picture.propTypes = {
+    itemProp: React.PropTypes.string,
     className: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.array,

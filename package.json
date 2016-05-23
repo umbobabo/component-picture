@@ -108,7 +108,7 @@
   },
   "devDependencies": {
     "@economist/doc-pack": "^1.0.7",
-    "@economist/provision-react-component": "3.0.1",
+    "@economist/provision-react-component": "3.0.3",
     "babel-cli": "^6.6.5",
     "babel-core": "^6.7.4",
     "babel-eslint": "^6.0.1",
@@ -124,7 +124,7 @@
     "chai-enzyme": "^0.4.2",
     "chai-spies": "^0.7.1",
     "coveralls": "^2.11.9",
-    "enzyme": "^2.2.0",
+    "enzyme": "^2.3.0",
     "eslint": "^2.8.0",
     "eslint-config-strict": "^8.5.1",
     "eslint-config-strict-react": "^8.0.1",
