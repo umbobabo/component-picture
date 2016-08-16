@@ -122,8 +122,8 @@ if (process.env.NODE_ENV !== 'production') {
     sources: React.PropTypes.arrayOf(React.PropTypes.shape({
       url: React.PropTypes.string.isRequired,
       width: React.PropTypes.number.isRequired,
-      height: React.PropTypes.number.isRequired,
-      dppx: React.PropTypes.number.isRequired,
+      height: React.PropTypes.number,
+      dppx: React.PropTypes.number,
       mime: React.PropTypes.string,
     })).isRequired,
   };
