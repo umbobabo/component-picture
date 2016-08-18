@@ -46,9 +46,7 @@ export default class Picture extends React.Component {
   componentDidMount() {
     if (this.state.isSvgSource === false) {
       const element = findDomNode(this);
-      addElementResizeListener(element, () => {
-        this.changeImageByWidth();
-      });
+      addElementResizeListener(element, this.changeImageByWidth);
       this.changeImageByWidth(element.offsetWidth, element.offsetHeight);
     }
   }
