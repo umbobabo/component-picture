@@ -62,6 +62,12 @@ export default class Picture extends React.Component {
       if (Math.abs(rightSource.dppx - dppx) < Math.abs(leftSource.dppx - dppx)) {
         return rightSource;
       }
+      if (rightSource.width < width && leftSource.width >= width) {
+        return leftSource;
+      }
+      if (leftSource.width < width && rightSource.width >= width) {
+        return rightSource;
+      }
       const rightSourceWidthDelta = Math.abs(rightSource.width - width);
       const leftSourceWidthDelta = Math.abs(leftSource.width - width);
       if (rightSourceWidthDelta === leftSourceWidthDelta) {
@@ -70,7 +76,7 @@ export default class Picture extends React.Component {
         return (rightSourceHeightDelta < leftSourceHeightDelta) ? rightSource : leftSource;
       }
       return (rightSourceWidthDelta < leftSourceWidthDelta) ? rightSource : leftSource;
-    }, this.props.sources[0]);
+    });
     this.setState(bestFitImage);
   }
 
