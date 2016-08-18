@@ -20,6 +20,7 @@ export default class Picture extends React.Component {
   constructor(props, ...rest) {
     super(props, ...rest);
     this.changeImageByWidth = this.changeImageByWidth.bind(this);
+    this.hasChanged = false;
     const { sources } = props;
     let isSvgSource = false;
     sources.forEach((source) => {
@@ -45,7 +46,9 @@ export default class Picture extends React.Component {
   componentDidMount() {
     if (this.state.isSvgSource === false) {
       const element = findDomNode(this);
-      addElementResizeListener(element, this.changeImageByWidth);
+      addElementResizeListener(element, () => {
+        this.changeImageByWidth();
+      });
       this.changeImageByWidth(element.offsetWidth, element.offsetHeight);
     }
   }
@@ -94,12 +97,18 @@ export default class Picture extends React.Component {
         />
       );
     } else {
+      let pictureClassnamesModifier = '';
+      if (!this.hasChanged) {
+        this.hasChanged = true;
+        pictureClassnamesModifier = ' picture__image--changed';
+      }
+      const pictureClassnames = `picture__image${ pictureClassnamesModifier }`;
       pictureElement = (
         <img
           alt={alt}
           src={url}
           itemProp={itemProp}
-          className="picture__image"
+          className={pictureClassnames}
         />
       );
     }
