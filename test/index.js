@@ -37,7 +37,7 @@ describe('Picture', () => {
           alt="foo"
           src="https://placehold.it/400x500"
           itemProp="image"
-          className="picture__image"
+          className="picture__image picture__image--changed"
         />
       );
     });
@@ -61,7 +61,7 @@ describe('Picture', () => {
           alt="foo"
           src="https://placehold.it/300x400"
           itemProp="image"
-          className="picture__image"
+          className="picture__image picture__image--changed"
         />
       );
     });
