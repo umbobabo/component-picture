@@ -140,14 +140,16 @@ describe('Picture', () => {
       picture.setState = (state) => (picture.state = { ...picture.state, ...state });
     });
 
-    it('sets state.url to the closest image to the given (width, height)', () => {
+    it('sets state.url to the better image to the given (width, height)', () => {
       picture.state.dppx = 1;
       picture.changeImageByWidth(2000, 2000);
-      picture.state.url.should.equal('https://placehold.it/896x504', 'closest to 2000x2000');
+      picture.state.url.should.equal('https://placehold.it/896x504', 'better is 896x504');
       picture.changeImageByWidth(890, 500);
-      picture.state.url.should.equal('https://placehold.it/896x504', 'closest to 890x500');
+      picture.state.url.should.equal('https://placehold.it/896x504', 'better is 896x504');
       picture.changeImageByWidth(770, 450);
-      picture.state.url.should.equal('https://placehold.it/768x432', 'closest to 770x450');
+      picture.state.url.should.equal('https://placehold.it/896x504', 'better is 896x504');
+      picture.changeImageByWidth(750, 450);
+      picture.state.url.should.equal('https://placehold.it/768x432', 'better is 768x432');
     });
 
     it('only picks images with appropriate dppx', () => {
