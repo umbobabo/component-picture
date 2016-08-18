@@ -85,7 +85,7 @@ export default class Picture extends React.Component {
 
   render() {
     const { url, isSvgSource } = this.state || {};
-    const { className, alt, itemProp, ...remainingProps } = this.props;
+    const { className, alt, itemProp } = this.props;
     let pictureElement = null;
     if (isSvgSource) {
       pictureElement = (
@@ -113,7 +113,7 @@ export default class Picture extends React.Component {
       );
     }
     return (
-      <div {...remainingProps} className={[ 'picture' ].concat(className).join(' ').trim()}>
+      <div className={[ 'picture' ].concat(className).join(' ').trim()}>
         {pictureElement}
       </div>
     );
